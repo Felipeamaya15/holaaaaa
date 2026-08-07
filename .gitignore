@@ -1,0 +1,15 @@
+# Sistemas Operativos
+.DS_Store
+Thumbs.db
+
+# Editores de código
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos de entorno (nunca se suben contraseñas)
+.env
