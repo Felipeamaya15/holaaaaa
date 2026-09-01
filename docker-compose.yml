@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  #BASE DE DATOS (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: db_consultoria
+    restart: always
+    environment:
+      POSTGRES_DB: consultoria_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  #BACKEND (Django REST Framework)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: django_backend
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app              # Sincroniza cambios de código en tiempo real
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DB_NAME=consultoria_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgrespassword
+      - DB_HOST=db                  # Nombre del servicio de base de datos
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+  # 3. FRONTEND (React + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react_frontend
+    restart: always
+    volumes:
+      - ./frontend:/app             # Hot-reload de React en vivo
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
