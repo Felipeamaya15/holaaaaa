@@ -11,5 +11,26 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Archivos de entorno (nunca se suben contraseñas)
+# Archivos de entorno y credenciales
 .env
+.env.*
+!.env.example
+
+# Node / Frontend (React + Vite)
+node_modules/
+frontend/node_modules/
+.vite/
+frontend/.vite/
+dist/
+frontend/dist/
+*.log
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+db.sqlite3
+staticfiles/
+media/
+venv/
+.venv/
