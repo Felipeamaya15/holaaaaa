@@ -1,12 +1,10 @@
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
-# Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias si existe package.json, o continuar
-RUN npm install || true
+RUN npm install --verbose
 
 COPY . .
 

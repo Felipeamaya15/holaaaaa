@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    #Apps propias
+    'apps.core',
+    'apps.authentication',
 ]
 
 MIDDLEWARE = [
@@ -75,14 +77,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import os
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-dev-key')
+DEBUG = os.getenv('DEBUG', '1') == '1'
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'consultoria_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgrespassword',
-        'HOST': 'db',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'consultoria_db'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'postgrespassword'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -131,3 +138,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
+
+
+import os
+
+# Configuración NoSQL (MongoDB)
+MONGO_HOST = os.getenv('MONGO_HOST', 'mongodb')
+MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))
+MONGO_USER = os.getenv('MONGO_USER', 'mongoadmin')
+MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'secretpassword')
+MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'logs_db')
+
+MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
