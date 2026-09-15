@@ -1,18 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface EnterStoreButtonProps {
   catalogRoute: string;
 }
 
 export const EnterStoreButton: React.FC<EnterStoreButtonProps> = ({ catalogRoute }) => {
-  const handleNavigation = () => {
-    window.location.href = catalogRoute; // Fallback temporal sin react-router
-  };
+  const navigate = useNavigate();
 
   return (
     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
       <button 
-        onClick={handleNavigation}
+        onClick={() => navigate(catalogRoute)}
         style={{
           padding: '1rem 2rem', fontSize: '1.1rem', fontWeight: '600', color: '#ffffff', 
           backgroundColor: '#5454EB', border: 'none', borderRadius: '9999px', cursor: 'pointer', 

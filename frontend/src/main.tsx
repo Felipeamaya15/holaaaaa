@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './app/router';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <div style={{ fontFamily: 'sans-serif', padding: '2rem', textAlign: 'center' }}>
-      <h1>Frontend React + Vite funcionando en Docker </h1>
-      <p>Clean Architecture + Feature-First listo para desarrollar.</p>
-    </div>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
