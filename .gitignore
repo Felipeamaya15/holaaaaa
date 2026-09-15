@@ -34,3 +34,13 @@ staticfiles/
 media/
 venv/
 .venv/
+
+# Testing y Cobertura (Python / JS)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Respaldos o volcados locales de BD
+*.sql
+*.tar
+*.dump
