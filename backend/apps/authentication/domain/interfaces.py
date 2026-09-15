@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Dict, Any
 from .entities import UserEntity
 
 
 class IUserRepository(ABC):
-    """Contrato que debe cumplir cualquier adaptador de persistencia (Postgres/Mongo)"""
-
+    """Puerto de persistencia para usuarios"""
     @abstractmethod
     def get_by_id(self, user_id: int) -> Optional[UserEntity]:
         pass
@@ -24,4 +23,26 @@ class IUserRepository(ABC):
 
     @abstractmethod
     def verify_credentials(self, username_or_email: str, password: str) -> Optional[UserEntity]:
+        pass
+
+
+class ITokenService(ABC):
+    """Puerto para generación y validación de tokens (desacoplado de JWT o DRF Tokens)"""
+    @abstractmethod
+    def generate_token(self, user: UserEntity) -> str:
+        pass
+
+    @abstractmethod
+    def validate_token(self, token: str) -> Optional[Dict[str, Any]]:
+        pass
+
+
+class IEmailService(ABC):
+    """Puerto para comunicaciones externas (desacoplado de SMTP, SendGrid, Amazon SES)"""
+    @abstractmethod
+    def send_welcome_email(self, to_email: str, username: str) -> bool:
+        pass
+
+    @abstractmethod
+    def send_password_reset_email(self, to_email: str, reset_link: str) -> bool:
         pass
