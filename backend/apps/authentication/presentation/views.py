@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
-from backend.apps.core.presentation.responses import success_response, error_response
+from apps.core.presentation.responses import success_response, error_response
 from apps.authentication.domain.exceptions import (
     AuthException,
     InvalidCredentialsException,
