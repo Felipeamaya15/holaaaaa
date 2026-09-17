@@ -154,3 +154,7 @@ MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'secretpassword')
 MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'logs_db')
 
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'apps.core.presentation.exceptions.custom_exception_handler',
+}
