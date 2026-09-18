@@ -155,6 +155,15 @@ MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'logs_db')
 
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
 
+# Django REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'apps.core.presentation.exceptions.custom_exception_handler',
 }
