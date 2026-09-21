@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     #Apps propias
     'apps.core',
     'apps.authentication',
+    'apps.catalog',
 ]
 
 MIDDLEWARE = [
