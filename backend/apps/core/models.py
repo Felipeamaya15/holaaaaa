@@ -115,6 +115,15 @@ class ItemPedido(models.Model):
     id_item_pedido = models.BigAutoField(primary_key=True)
     id_pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, db_column='id_pedido')
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, db_column='id_producto')
+    id_variante = models.ForeignKey(
+        'VarianteProducto', 
+        on_delete=models.PROTECT, 
+        db_column='id_variante', 
+        null=True, 
+        blank=True,
+        related_name='items_pedido'
+    )
+    
     cantidad = models.IntegerField()
     precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
 

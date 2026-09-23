@@ -44,3 +44,44 @@ class VarianteProductoSerializer(serializers.ModelSerializer):
                     {"atributos": "Ya existe otra variante con esta misma combinación de atributos para este producto."}
                 )
         return data
+    
+class CompraItemInputSerializer(serializers.Serializer):
+    id_variante = serializers.IntegerField()
+    cantidad = serializers.IntegerField(min_value=1)
+
+class RegistrarCompraSerializer(serializers.Serializer):
+    id_usuario = serializers.IntegerField()
+    items = CompraItemInputSerializer(many=True)
+
+    def validate_items(self, items):
+        if not items:
+            raise serializers.ValidationError("Debe incluir al menos un producto en la compra.")
+        
+        for item in items:
+            id_variante = item['id_variante']
+            cantidad = item['cantidad']
+
+            try:
+                variante = VarianteProducto.objects.get(id_variante=id_variante)
+            except VarianteProducto.DoesNotExist:
+                raise serializers.ValidationError(
+                    f"La variante con ID {id_variante} no existe."
+                )
+
+            if not variante.es_activa:
+                raise serializers.ValidationError(
+                    f"La variante '{variante.sku}' no está activa para la venta."
+                )
+
+            # Regla de negocio crítica: Stock en 0 o insuficiente
+            if variante.stock == 0:
+                raise serializers.ValidationError(
+                    f"Operación rechazada: La variante '{variante.sku}' tiene stock 0 y no puede ser comprada."
+                )
+
+            if variante.stock < cantidad:
+                raise serializers.ValidationError(
+                    f"Stock insuficiente para '{variante.sku}'. Stock disponible: {variante.stock}, solicitado: {cantidad}."
+                )
+
+        return items

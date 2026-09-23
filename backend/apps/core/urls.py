@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from apps.core.presentation.views import (
     VarianteProductoListCreateView,
-    VarianteProductoDetailView 
+    VarianteProductoDetailView,
+    RegistrarCompraView
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     
     # Consultar y actualizar una variante específica
     path('productos/<int:id_producto>/variantes/<int:id_variante>/', VarianteProductoDetailView.as_view(), name='variante-detail'),
+    path('compras/', RegistrarCompraView.as_view(), name='registrar-compra'),
 ]
