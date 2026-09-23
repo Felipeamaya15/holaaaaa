@@ -23,17 +23,24 @@ class VarianteProductoSerializer(serializers.ModelSerializer):
         return sku_formateado
 
     def validate(self, data):
-        # Evita duplicar combinaciones de atributos en un mismo producto
+        # Determinamos el producto (desde el contexto o desde la instancia existente)
         id_producto = self.context.get('id_producto')
-        atributos = data.get('atributos', {})
+        if not id_producto and self.instance:
+            id_producto = self.instance.id_producto
+
+        atributos = data.get('atributos', self.instance.atributos if self.instance else {})
 
         if id_producto and atributos:
-            existe = VarianteProducto.objects.filter(
+            consulta = VarianteProducto.objects.filter(
                 id_producto=id_producto,
                 atributos=atributos
-            ).exists()
-            if existe:
+            )
+            # Si estamos editando una variante existente, la excluimos de la búsqueda de duplicados
+            if self.instance:
+                consulta = consulta.exclude(pk=self.instance.pk)
+
+            if consulta.exists():
                 raise serializers.ValidationError(
-                    {"atributos": "Ya existe una variante con esta misma combinación de atributos."}
+                    {"atributos": "Ya existe otra variante con esta misma combinación de atributos para este producto."}
                 )
         return data
