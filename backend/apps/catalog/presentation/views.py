@@ -5,12 +5,12 @@ from rest_framework import status
 from apps.core.presentation.responses import success_response, error_response
 from apps.core.infrastructure.tenant import resolver_tienda_id
 from apps.catalog.infrastructure.repositories import ProductRepository
-from apps.catalog.application.use_cases import ListPublicProductsUseCase , GetPublicProductDetailUseCase
-from .serializers import ProductPublicListItemSerializer, ProductPublicDetailSerializer
+from apps.catalog.application.use_cases import ListPublicProductsUseCase , GetPublicProductDetailUseCase,GetPublicProductAttributesUseCase
+from .serializers import ProductPublicListItemSerializer, ProductPublicDetailSerializer, ProductPublicAttributesSerializer
 
 
 class PublicProductListAPIView(APIView):
-    """Listado público de productos activos del catálogo (Scrum 218)."""
+    """Listado público de productos activos del catálogo."""
     permission_classes = [AllowAny]
 
     def get(self, request):
@@ -27,7 +27,7 @@ class PublicProductListAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 class PublicProductDetailAPIView(APIView):
-    """Detalle público de un producto identificado por su slug (Scrum 219)."""
+    """Detalle público de un producto identificado por su slug."""
     permission_classes = [AllowAny]
  
     def get(self, request, slug):
@@ -48,6 +48,31 @@ class PublicProductDetailAPIView(APIView):
         return success_response(
             data=data,
             mensaje="Detalle de producto obtenido correctamente",
+            status=status.HTTP_200_OK,
+        )
+
+class PublicProductAttributesAPIView(APIView):
+    """Atributos de un producto identificado por su slug."""
+    permission_classes = [AllowAny]
+ 
+    def get(self, request, slug):
+        tienda_id = resolver_tienda_id(request)
+ 
+        use_case = GetPublicProductAttributesUseCase(ProductRepository())
+        atributos = use_case.execute(tienda_id, slug)
+ 
+        if atributos is None:
+            return error_response(
+                mensaje="El producto solicitado no fue encontrado",
+                codigo="RECURSO_NO_ENCONTRADO",
+                status=status.HTTP_404_NOT_FOUND,
+            )
+ 
+        data = ProductPublicAttributesSerializer(atributos).data
+ 
+        return success_response(
+            data=data,
+            mensaje="Atributos de producto obtenidos correctamente",
             status=status.HTTP_200_OK,
         )
     

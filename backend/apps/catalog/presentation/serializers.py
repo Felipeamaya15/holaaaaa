@@ -64,3 +64,14 @@ class ProductPublicDetailSerializer(serializers.Serializer):
     atributos_generales = AtributoGeneralSerializer(many=True, required=False)
     variantes = VarianteSerializer(many=True, required=False)
     seo = SeoSerializer(required=False)
+ 
+class AtributoVarianteAgrupadoSerializer(serializers.Serializer):
+    clave = serializers.CharField()
+    etiqueta = serializers.CharField()
+    valores = serializers.ListField(child=serializers.CharField())
+ 
+ 
+class ProductPublicAttributesSerializer(serializers.Serializer):
+    atributos_generales = AtributoGeneralSerializer(many=True)
+    atributos_variante = AtributoVarianteAgrupadoSerializer(many=True)
+ 
